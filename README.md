@@ -6,6 +6,8 @@ Collect/Create NLP resources using crowdsourced speech and text data of diverse 
 ## Context
 Africa is the most linguistically diverse continent in the world. The performance of SOTA NLP systems is fragile in most African languages compared to the European ones (for example) despite a similar or more significant number of speakers. For example, while the number of Swahili and German language speakers are identical (L1 and L2, about 100M), the latter is far better studied by the research community than the former. Also, even though European languages such as English, French, and Portuguese are official languages in most African countries, the local spoken and written variations can have substantial differences compared to the standard versions of the European languages. The vocabulary and accents are largely influenced by the local languages. Current NLP systems rarely consider such discrepancies. Consequently, significant portions of people are locked out of the opportunities opened by the recent advances in natural language processing and its applications.
 
+## Usage
+
 ## Data collection
 ### Methodoloy
 #### Speech
