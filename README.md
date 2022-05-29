@@ -31,7 +31,7 @@ Audio data was crowdsourced with a chat bot using Whatsapp and Twilio. Transcrip
 ### Methodoloy
 #### Speech
 The workflow used to collect speech data can be found in [twilio/flow.json](). Diagram of the process is shown below
-![alt text](https://github.com/Waxal-Multilingual/speech-data/docs/flow.jpg?raw=true)
+![alt text](https://github.com/Waxal-Multilingual/speech-data/docs/blob/main/flow.jpg?raw=true)
 
 
 #### Transcription
