@@ -35,6 +35,8 @@ The workflow used to collect speech data can be found in [twilio/flow.json](). D
 
 
 #### Transcription
+// TODO
 #### Translation
-
+// TODO
 ## Participants
+// TODO
