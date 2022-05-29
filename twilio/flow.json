@@ -1,0 +1,778 @@
+{
+  "description": "Waxal Staging",
+  "states": [
+    {
+      "name": "Trigger",
+      "type": "trigger",
+      "transitions": [
+        {
+          "next": "paused",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "incomingCall"
+        },
+        {
+          "next": "set_api_participant",
+          "event": "incomingRequest"
+        },
+        {
+          "event": "incomingParent"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -670,
+          "y": -2000
+        }
+      }
+    },
+    {
+      "name": "send_prompt_and_wait",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "should_set_start",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "next": "server_busy",
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -360,
+          "y": -680
+        },
+        "from": "{{flow.channel.address}}",
+        "body": "{% assign i=flow.variables.currentPrompt | plus:1 %}\n{{i}}/{{flow.variables.questions}}",
+        "media_url": "{{flow.variables.currentPromptImage}}",
+        "timeout": "7200"
+      }
+    },
+    {
+      "name": "check_media",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "bad_voice",
+          "event": "noMatch"
+        },
+        {
+          "next": "send_to_drive",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "{{flow.variables.mediaUrl}}",
+              "arguments": [
+                "{{flow.variables.mediaUrl}}"
+              ],
+              "type": "is_not_blank",
+              "value": "Is Not Blank"
+            }
+          ]
+        },
+        {
+          "next": "bad_voice",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "{{flow.variables.mediaUrl}}",
+              "arguments": [
+                "{{flow.variables.mediaUrl}}"
+              ],
+              "type": "is_blank",
+              "value": "Is Blank"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{flow.variables.mediaUrl}}",
+        "offset": {
+          "x": -720,
+          "y": 60
+        }
+      }
+    },
+    {
+      "name": "Thanks",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 830,
+          "y": 450
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Thank you for your responses!",
+        "media_url": "https://storage.googleapis.com/participant-guide/thanks.ogg"
+      }
+    },
+    {
+      "name": "send_to_drive",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "update_prompt_count",
+          "event": "success"
+        },
+        {
+          "next": "server_busy",
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "service_sid": "ZSdf88466a5e32c94ffad6236b21d9a4d9",
+        "environment_sid": "ZE595aad567b8d7626711b335470b4ed9d",
+        "offset": {
+          "x": 170,
+          "y": 750
+        },
+        "function_sid": "ZH7bfb25896cddc106ec1c9ccebef85aaa",
+        "parameters": [
+          {
+            "value": "{{flow.variables.mediaUrl}}",
+            "key": "voiceNote"
+          },
+          {
+            "value": "{{flow.variables.candidatePhone}}",
+            "key": "candidatePhone"
+          },
+          {
+            "value": "{{flow.variables.currentPromptValue}}",
+            "key": "prompt"
+          }
+        ],
+        "url": "https://drive-upload-7498.twil.io/upload_voice"
+      }
+    },
+    {
+      "name": "get_prompts",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "set_initial_prompt_count",
+          "event": "success"
+        },
+        {
+          "next": "server_busy",
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "service_sid": "ZSdf88466a5e32c94ffad6236b21d9a4d9",
+        "environment_sid": "ZE595aad567b8d7626711b335470b4ed9d",
+        "offset": {
+          "x": -800,
+          "y": -1510
+        },
+        "function_sid": "ZHdeab8a1446780a8abe65916d4f69686a",
+        "parameters": [
+          {
+            "value": "{{flow.variables.candidatePhone}}",
+            "key": "phone"
+          }
+        ],
+        "url": "https://drive-upload-7498.twil.io/prompt_fetch"
+      }
+    },
+    {
+      "name": "set_initial_prompt_count",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "do_intro",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{% assign i=widgets.get_prompts.parsed.remaining | plus:0 %}{{i}}",
+            "key": "promptCount"
+          },
+          {
+            "value": "{% assign i=widgets.get_prompts.parsed.responses | plus:0 %}{{i}}",
+            "key": "currentPrompt"
+          },
+          {
+            "value": "{{widgets.get_prompts.parsed.prompts}}",
+            "key": "prompts"
+          }
+        ],
+        "offset": {
+          "x": -1050,
+          "y": -1210
+        }
+      }
+    },
+    {
+      "name": "prompts_remain",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "next": "set_current_prompt_value",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value not_equal_to 0",
+              "arguments": [
+                "{{flow.variables.promptCount}}"
+              ],
+              "type": "not_equal_to",
+              "value": "0"
+            }
+          ]
+        },
+        {
+          "next": "Thanks",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 0",
+              "arguments": [
+                "{{flow.variables.promptCount}}"
+              ],
+              "type": "equal_to",
+              "value": "0"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{flow.variables.promptCount}}",
+        "offset": {
+          "x": -1770,
+          "y": -800
+        }
+      }
+    },
+    {
+      "name": "update_prompt_count",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "prompts_remain",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{% assign i=widgets.send_to_drive.parsed.remaining | plus:0 %}{{i}}",
+            "key": "promptCount"
+          },
+          {
+            "value": "{% assign i=widgets.send_to_drive.parsed.answered | plus:0 %}{{i}}",
+            "key": "currentPrompt"
+          }
+        ],
+        "offset": {
+          "x": -2170,
+          "y": 350
+        }
+      }
+    },
+    {
+      "name": "set_current_prompt_value",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "send_prompt_and_wait",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{% assign i=flow.variables.currentPrompt | plus:0 %}{{widgets.get_prompts.parsed.prompts[i].key}}",
+            "key": "currentPromptValue"
+          },
+          {
+            "value": "{% assign i=flow.variables.currentPrompt | plus:0 %}  {{widgets.get_prompts.parsed.prompts[i].url}}",
+            "key": "currentPromptImage"
+          }
+        ],
+        "offset": {
+          "x": -1020,
+          "y": -640
+        }
+      }
+    },
+    {
+      "name": "participant_exists",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "set_started",
+          "event": "success"
+        },
+        {
+          "next": "server_busy",
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "service_sid": "ZSdf88466a5e32c94ffad6236b21d9a4d9",
+        "environment_sid": "ZE595aad567b8d7626711b335470b4ed9d",
+        "offset": {
+          "x": -1750,
+          "y": -1760
+        },
+        "function_sid": "ZH1ea9c2f2dc6c31a5fde06b01fff9d2d7",
+        "parameters": [
+          {
+            "value": "{{flow.variables.candidatePhone}}",
+            "key": "phone"
+          }
+        ],
+        "url": "https://drive-upload-7498.twil.io/verify_participant"
+      }
+    },
+    {
+      "name": "verify_participant",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "next": "get_prompts",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to true",
+              "arguments": [
+                "{{flow.variables.status}}"
+              ],
+              "type": "equal_to",
+              "value": "ready"
+            }
+          ]
+        },
+        {
+          "next": "access_denied",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to false",
+              "arguments": [
+                "{{flow.variables.status}}"
+              ],
+              "type": "equal_to",
+              "value": "notfound"
+            }
+          ]
+        },
+        {
+          "next": "Thanks",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to completed",
+              "arguments": [
+                "{{flow.variables.status}}"
+              ],
+              "type": "equal_to",
+              "value": "completed"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{flow.variables.status}}",
+        "offset": {
+          "x": -2240,
+          "y": -1290
+        }
+      }
+    },
+    {
+      "name": "access_denied",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -2270,
+          "y": -810
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Access denied. Please contact your Waxal Admin."
+      }
+    },
+    {
+      "name": "set_media_url",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "check_media",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{widgets.send_prompt_and_wait.inbound.MediaUrl0}}",
+            "key": "mediaUrl"
+          },
+          {
+            "value": "{{contact.channel.address}}",
+            "key": "candidatePhone"
+          }
+        ],
+        "offset": {
+          "x": -2180,
+          "y": 10
+        }
+      }
+    },
+    {
+      "name": "bad_voice",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "fix_media_url",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 110,
+          "y": -40
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "Veuillez répondre à l'invite avec un message vocal",
+        "timeout": "72000"
+      }
+    },
+    {
+      "name": "fix_media_url",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "check_media",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{widgets.bad_voice.inbound.MediaUrl0}}",
+            "key": "mediaUrl"
+          },
+          {
+            "value": "{{contact.channel.address}}",
+            "key": "candidatePhone"
+          }
+        ],
+        "offset": {
+          "x": -1220,
+          "y": 980
+        }
+      }
+    },
+    {
+      "name": "instructions",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "prompts_remain",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 620,
+          "y": -1130
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Instructions",
+        "media_url": "https://storage.googleapis.com/participant-guide/instructions_2.ogg"
+      }
+    },
+    {
+      "name": "do_intro",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "next": "prompts_remain",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value greater_than 0",
+              "arguments": [
+                "{{flow.variables.currentPrompt}}"
+              ],
+              "type": "greater_than",
+              "value": "0"
+            }
+          ]
+        },
+        {
+          "next": "instructions",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to 0",
+              "arguments": [
+                "{{flow.variables.currentPrompt}}"
+              ],
+              "type": "equal_to",
+              "value": "0"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{flow.variables.currentPrompt}}",
+        "offset": {
+          "x": 340,
+          "y": -1470
+        }
+      }
+    },
+    {
+      "name": "set_api_participant",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "participant_exists",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{flow.data.contact}}",
+            "key": "candidatePhone"
+          }
+        ],
+        "offset": {
+          "x": -70,
+          "y": -1800
+        }
+      }
+    },
+    {
+      "name": "mark_participant_started",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "set_media_url",
+          "event": "success"
+        },
+        {
+          "next": "server_busy",
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "service_sid": "ZSdf88466a5e32c94ffad6236b21d9a4d9",
+        "environment_sid": "ZE595aad567b8d7626711b335470b4ed9d",
+        "offset": {
+          "x": 600,
+          "y": -760
+        },
+        "function_sid": "ZH8bdffe5a5c3a8fa065feca3647e5ae51",
+        "parameters": [
+          {
+            "value": "{{flow.variables.candidatePhone}}",
+            "key": "phone"
+          }
+        ],
+        "url": "https://drive-upload-7498.twil.io/mark_participant_started"
+      }
+    },
+    {
+      "name": "set_started",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "verify_participant",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{widgets.participant_exists.parsed.started}}",
+            "key": "started"
+          },
+          {
+            "value": "{{widgets.participant_exists.parsed.status}}",
+            "key": "status"
+          },
+          {
+            "value": "{{widgets.participant_exists.parsed.questions}}",
+            "key": "questions"
+          }
+        ],
+        "offset": {
+          "x": -2170,
+          "y": -1530
+        }
+      }
+    },
+    {
+      "name": "should_set_start",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "next": "set_media_url",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to true",
+              "arguments": [
+                "{{flow.variables.started}}"
+              ],
+              "type": "equal_to",
+              "value": "true"
+            }
+          ]
+        },
+        {
+          "next": "mark_participant_started",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to false",
+              "arguments": [
+                "{{flow.variables.started}}"
+              ],
+              "type": "equal_to",
+              "value": "false"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{flow.variables.started}}",
+        "offset": {
+          "x": 1050,
+          "y": -1270
+        }
+      }
+    },
+    {
+      "name": "set_msg_participant",
+      "type": "set-variables",
+      "transitions": [
+        {
+          "next": "participant_exists",
+          "event": "next"
+        }
+      ],
+      "properties": {
+        "variables": [
+          {
+            "value": "{{contact.channel.address}}",
+            "key": "candidatePhone"
+          }
+        ],
+        "offset": {
+          "x": -1450,
+          "y": -2140
+        }
+      }
+    },
+    {
+      "name": "server_busy",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 1260,
+          "y": -310
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Serveur occupé. Veuillez patienter quelques minutes et taper \"salut\" pour continuer"
+      }
+    },
+    {
+      "name": "paused",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -1480,
+          "y": -2420
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Merci pour ton intérêt. L'enquête est actuellement fermée. Nous vous contacterons dès sa réouverture."
+      }
+    }
+  ],
+  "initial_state": "Trigger",
+  "flags": {
+    "allow_concurrent_calls": false
+  }
+}
