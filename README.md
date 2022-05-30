@@ -18,13 +18,13 @@ This file contains a table of the responses collected. Each response has a link 
 #### Transcription
 This file contians a table of transcriptions of the data from the **Reponse** table.
 ##### Key Columns 
- - Response: The ID of a response maps to `{Prompt}:{Participant}` from the **Response** table.
+ - Response: The ID of a response maps to the **Key** field of the **Response** table.
  - Language: The language of the transcribed text in the **Text** column.
  - Text: The transcribed text.
 #### Translation
 This file contains translations of the text from from the **Transcriptions** table.
 ##### Key Columns 
- - Response: The ID of a response maps to `{Prompt}:{Participant}` from the **Response** table.
+ - Response: The ID of a response maps to the **Key** field of the **Response** table.
  - Transcription: Foreign key mapping to the **Key** field in the **Transcriptions** table.
  - Target Language: The language to which the text was transcribed.
  - Text: The tranlsated text.
