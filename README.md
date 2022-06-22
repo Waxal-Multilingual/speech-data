@@ -38,13 +38,6 @@ Audio data was crowdsourced with a chat bot using Whatsapp and Twilio. Transcrip
 
 ### Methodoloy
 #### Speech
-The workflow used to collect speech will be shared in an upcoming release. Diagram of the process is shown below
+Instructions for setting up your own speech collection can be found in the [collection](https://github.com/Waxal-Multilingual/speech-data/collection) package. Diagram of the process is shown below
 ![alt text](https://github.com/Waxal-Multilingual/speech-data/blob/main/docs/flow.png?raw=true)
 
-
-#### Transcription
-// TODO
-#### Translation
-// TODO
-## Participants
-// TODO
