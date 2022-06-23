@@ -6,6 +6,10 @@ const fs = require('fs');
  * @returns a private Key suitable for calling Google APIs.
  */
 exports.loadPrivateKey = () => {
+
+  const keyVal = fs.readFileSync(Runtime.getAssets()["/vars.json"].path);
+  assert (keyVal, "Please make sure to set your service account private key in assets/service_account_key.private.json")
+
   process.env.GOOGLE_APPLICATION_CREDENTIALS =
           Runtime.getAssets()["/service_account_key.json"].path;
   return JSON.parse(fs.readFileSync(process.env.GOOGLE_APPLICATION_CREDENTIALS, 'utf-8'));
