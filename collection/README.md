@@ -77,7 +77,7 @@ The language of data being collected.
 Your Waxal server will be the endpoint called by Twilio when participants reply to your prompts. You will need to deploy your server in a publicly accessible way such that Twilio can make RPCs to it.
 
 #### Starting your server locally
-To start a local server run ```npm start``` from ```speech-data/collection```. Fix any errors that pop up until your server is running. Make note of the running port (in most cases it should be 3000.
+To start a local server run ```npm start``` from ```speech-data/collection```. Fix any errors that pop up until your server is running. Make note of the running port (in most cases it should be 3000).
 
 #### Deploying your server with ngrok
 Download ngrok from the [install page](https://ngrok.com/download). Start an ngrok tunnel on your server port:
