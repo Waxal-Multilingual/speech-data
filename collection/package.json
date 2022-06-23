@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "test": "",
-    "start": "twilio-run",
+    "start": "bash start.sh",
     "deploy": "twilio-run deploy"
   },
   "dependencies": {
