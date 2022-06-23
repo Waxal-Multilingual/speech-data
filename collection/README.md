@@ -7,7 +7,7 @@ This package contains a JS library that works in conjunction with Twilio to perf
 
 ### Before you start
 1. Sign up for a [Twilio](https://www.twilio.com/) account.
-2. Have a available a Google Cloud project with the following:
+2. Have available a [Google Cloud](https://console.cloud.google.com/) project with the following:
    * A service account ([documentation](https://cloud.google.com/iam/docs/creating-managing-service-accounts)).
    * A service account key JSON file ([documentation](https://cloud.google.com/iam/docs/creating-managing-service-account-keys)).
    * A GCP storage bucket ([documentation](https://cloud.google.com/storage/docs/creating-buckets)) with write access granted to the service account above ([Instructions here](https://cloud.google.com/storage/docs/access-control/using-iam-permissions)).
