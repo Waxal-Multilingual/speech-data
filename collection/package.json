@@ -14,6 +14,7 @@
     "exponential-backoff": "^3.1.0",
     "google-spreadsheet": "^3.3.0",
     "googleapis": "^103.0.0",
+    "mocha": "^10.0.0",
     "music-metadata": "^7.12.3",
     "twilio": "^3.56"
   },
