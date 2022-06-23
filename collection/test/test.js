@@ -5,6 +5,7 @@ const fs = require('fs');
 describe("Startup tests", () => {
     it("Twilio env keys are set", () => {
         const envVars = require('dotenv').config();
+        assert(envVars, "Please create a file called .env in the 'collection' directory");
         assert(envVars.parsed.ACCOUNT_SID.length > 0, "Please make sure to set ACCOUNT_SID in your .env file. Visit the Twilio console to find the value");
         assert(envVars.parsed.AUTH_TOKEN.length > 0, "Please make sure to set AUTH_TOKEN in your .env file. Visit the Twilio console to find the value");
     });
