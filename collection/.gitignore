@@ -131,3 +131,7 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Private JSON files
+assets/vars.private.json
+assets/service_account_key.private.json
