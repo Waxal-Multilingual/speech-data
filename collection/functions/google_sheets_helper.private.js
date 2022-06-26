@@ -27,7 +27,7 @@ async function getSheet(sheet) {
 
   await backOff(() => doc.useServiceAccountAuth(authHelper.loadPrivateKey()));
 
-  console.log(`Fetching ${document}`);
+  console.log(`Fetching ${sheetMap[sheet]}`);
 
   await doc.loadInfo();
 
