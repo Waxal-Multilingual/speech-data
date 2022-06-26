@@ -38,5 +38,5 @@ Audio data was crowdsourced with a chat bot using Whatsapp and Twilio. Transcrip
 
 ### Methodoloy
 #### Speech
-Instructions for setting up your own speech collection can be found in the [collection](https://github.com/Waxal-Multilingual/speech-data/collection) package.
+Instructions for setting up your own speech collection can be found in the [collection]([https://github.com/Waxal-Multilingual/speech-data/collection](https://github.com/Waxal-Multilingual/speech-data/tree/main/collection)) package.
 
