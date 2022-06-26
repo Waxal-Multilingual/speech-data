@@ -1,6 +1,3 @@
-const { GoogleSpreadsheet } = require('google-spreadsheet');
-const { backOff } = require("exponential-backoff");
-
 /**
  * Fetches a random, unseen prompt for the given participant.
  * @param {string} participantKey ID of the relevant participant.
@@ -14,14 +11,15 @@ exports.getNextPrompt = async (participantKey) => {
   let responseSheet = await helper.getResponseSheet();
   let responseRows = await responseSheet.getRows();
   let usedPrompts = new Set(responseRows
-    .filter(row => row["Participant"] == participantKey)
-    .map(resp => resp["Prompt"]));
+      .filter(row => row["Participant"] === participantKey)
+      .map(resp => resp["Prompt"]));
 
   // Find unused prompts.
   let promptSheet = await helper.getPromptSheet();
-  let prompts = (await promptSheet.getRows()).filter(row => !usedPrompts.has(row));
+  let prompts = (await promptSheet.getRows()).filter(
+      row => !usedPrompts.has(row));
 
   // Pick a random index among the unused prompts.
   const random = Math.floor(Math.random() * prompts.length);
-  return { "prompt": prompts[random], "position": usedPrompts.size + 1 };
+  return {"prompt": prompts[random], "position": usedPrompts.size + 1};
 }

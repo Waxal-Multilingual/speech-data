@@ -1,7 +1,7 @@
-const { GoogleSpreadsheet } = require('google-spreadsheet');
-const { backOff } = require("exponential-backoff");
+const {GoogleSpreadsheet} = require('google-spreadsheet');
+const {backOff} = require("exponential-backoff");
 
-// Map of spreadsheets to their key in {@link vars.private.json}
+// Map of spreadsheets to their key in {@link vars.template.private.json}
 const sheetMap = {
   "prompt-sheet": "Prompt",
   "participant-sheet": "Participant",
@@ -10,7 +10,7 @@ const sheetMap = {
 
 /**
  * Returns a reference to a Google Sheets spreadsheet object.
- * @param {string} sheet the key of the sheet required. 
+ * @param {string} sheet the key of the sheet required.
  * @returns GoogleSpreadsheet object for the given sheet.
  */
 async function getSheet(sheet) {
@@ -32,7 +32,7 @@ async function getSheet(sheet) {
   await doc.loadInfo();
 
   return doc.sheetsByTitle[sheetMap[sheet]];
-};
+}
 
 /**
  * Fetch the Prompts spreadsheet.

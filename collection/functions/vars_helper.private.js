@@ -1,9 +1,15 @@
 const fs = require('fs');
 
+/**
+ * Fetches variable values from {@link assets/vars.private.json}
+ * @param varName {string} name of the var to be fetched.
+ * @return {string} value of the requested variable.
+ */
 exports.getVar = (varName) => {
-    const varValue = JSON.parse(fs.readFileSync(Runtime.getAssets()["/vars.json"].path))[varName];
-    if (!varValue) {
-        throw(`Value ${varName} is required. Please make sure to set it in assets/vars.json`)
-    }
-    return JSON.parse(fs.readFileSync(Runtime.getAssets()["/vars.json"].path))[varName];
+  const varValue = JSON.parse(
+      fs.readFileSync(
+          Runtime.getAssets()["/vars.json"].path).toString())[varName];
+  return JSON.parse(
+      fs.readFileSync(
+          Runtime.getAssets()["/vars.json"].path).toString())[varName];
 }

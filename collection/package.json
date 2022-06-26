@@ -5,7 +5,8 @@
   "scripts": {
     "test": "",
     "start": "bash start.sh",
-    "deploy": "twilio-run deploy"
+    "deploy": "twilio-run deploy",
+    "postinstall": "bash post_install.sh"
   },
   "dependencies": {
     "@google-cloud/storage": "^6.1.0",
@@ -14,8 +15,10 @@
     "exponential-backoff": "^3.1.0",
     "google-spreadsheet": "^3.3.0",
     "googleapis": "^103.0.0",
+    "got": "^9.6.0",
     "mocha": "^10.0.0",
     "music-metadata": "^7.12.3",
+    "node-fetch": "^2.6.7",
     "twilio": "^3.56"
   },
   "devDependencies": {

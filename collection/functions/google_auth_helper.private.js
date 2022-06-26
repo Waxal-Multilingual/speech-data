@@ -8,26 +8,26 @@ const fs = require('fs');
 exports.loadPrivateKey = () => {
 
   const keyVal = fs.readFileSync(Runtime.getAssets()["/vars.json"].path);
-  assert (keyVal, "Please make sure to set your service account private key in assets/service_account_key.private.json")
 
   process.env.GOOGLE_APPLICATION_CREDENTIALS =
-          Runtime.getAssets()["/service_account_key.json"].path;
-  return JSON.parse(fs.readFileSync(process.env.GOOGLE_APPLICATION_CREDENTIALS, 'utf-8'));
+      Runtime.getAssets()["/service_account_key.json"].path;
+  return JSON.parse(
+      fs.readFileSync(process.env.GOOGLE_APPLICATION_CREDENTIALS, 'utf-8'));
 };
 
 /**
  * Authorizes Google APIs for calls to GCP.
  */
-exports.authorizeGoogleApis = async() =>  {
+exports.authorizeGoogleApis = async () => {
   return new Promise((resolve, reject) => {
     let privateKey = exports.loadPrivateKey();
 
     // Configure a JWT auth client
     let jwtClient = new google.auth.JWT(
-          privateKey.client_email,
-          null,
-          privateKey.private_key,
-          ['https://www.googleapis.com/auth/spreadsheets']);
+        privateKey.client_email,
+        null,
+        privateKey.private_key,
+        ['https://www.googleapis.com/auth/spreadsheets']);
     // authenticate request
     jwtClient.authorize(function (err, tokens) {
       if (err) {

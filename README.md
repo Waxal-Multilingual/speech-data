@@ -20,23 +20,23 @@ To download the audio files, run `gsutil -m cp -R gs://waxal-public {path/to/loc
 #### Response
 This file contains a table of the responses collected. Each response has a link to a public GCP storage bucket in the **Audio** column.
 #### Transcription
-This file contians a table of transcriptions of the data from the **Reponse** table.
+This file contains a table of transcriptions of the data from the **Reponse** table.
 ##### Key Columns 
  - Response: The ID of a response maps to the **Key** field of the **Response** table.
  - Language: The language of the transcribed text in the **Text** column.
  - Text: The transcribed text.
 #### Translation
-This file contains translations of the text from from the **Transcriptions** table.
+This file contains translations of the text from the **Transcriptions** table.
 ##### Key Columns 
  - Response: The ID of a response maps to the **Key** field of the **Response** table.
  - Transcription: Foreign key mapping to the **Key** field in the **Transcriptions** table.
  - Target Language: The language to which the text was transcribed.
- - Text: The tranlsated text.
+ - Text: The translated text.
 
 ## Data collection
-Audio data was crowdsourced with a chat bot using Whatsapp and Twilio. Transcription and translation was performed by linguists. More details below.
+Audio data was crowd-sourced with a chat bot using Whatsapp and Twilio. Transcription and translation was performed by linguists. More details below.
 
-### Methodoloy
+### Methodology
 #### Speech
-Instructions for setting up your own speech collection can be found in the [collection](https://github.com/Waxal-Multilingual/speech-data/collection) package.
+Instructions for setting up your own speech collection can be found in the [collection](https://github.com/Waxal-Multilingual/speech-data/tree/main/collection) package.
 

@@ -1,12 +1,12 @@
-const { Storage } = require('@google-cloud/storage');
+const {Storage} = require('@google-cloud/storage');
 const fetch = require('node-fetch');
 const fs = require('fs');
 const path = require('path');
-const { backOff } = require("exponential-backoff");
+const {backOff} = require("exponential-backoff");
 const got = require('got');
 const mm = require('music-metadata');
 
-var tmp_dir = require('os').tmpdir();
+const tmp_dir = require('os').tmpdir();
 const PUBLIC_DIR = `${tmp_dir}/mms_images`;
 
 // Create a local directory for staging audio files.
@@ -17,16 +17,18 @@ if (!fs.existsSync(PUBLIC_DIR)) {
 let varsPath = Runtime.getFunctions()['vars_helper'].path;
 let varsHelper = require(varsPath);
 
+let promptPath = Runtime.getFunctions()['messaging/send_prompt'].path;
+let promptHelper = require(promptPath);
+
 /**
  * Uploads audio file for voice note to GCP storage bucket.
  * @param {*} context Twilio client context.
  * @param {string} prompt ID of the prompt being responded to.
  * @param {string} mediaUrl URL of the audio sent by the user.
  * @param {string} participant ID of the responding participant.
- * @param {*} promptHelper Library for sending whatsapp messages.
  * @returns a bool indicating whether to continue sending prompts.
  */
-exports.uploadVoice = async (context, prompt, mediaUrl, participant, promptHelper) => {
+exports.uploadVoice = async (context, prompt, mediaUrl, participant) => {
   const stream = got.stream(mediaUrl)
   let duration = await extractDuration(stream);
 
@@ -35,11 +37,11 @@ exports.uploadVoice = async (context, prompt, mediaUrl, participant, promptHelpe
   // Notify the user if the message duration is too short.
   if (duration < minLength) {
     let tooShortAudio = varsHelper.getVar("voice-note-too-short-audio");
-    await promptHelper.sendPrompt(context, participant["Phone"], "", tooShortAudio);
+    await promptHelper.sendPrompt(context, participant["Phone"], "",
+        tooShortAudio);
     return false;
   }
 
-  const participantPhone = participant["Phone"];
   const participantKey = participant['Key'];
   console.log('Adding response: Uploading to storage');
 
@@ -48,10 +50,10 @@ exports.uploadVoice = async (context, prompt, mediaUrl, participant, promptHelpe
   await uploadToDirectory(prompt, participantKey, mediaUrl, bucket);
 
   // Update Response and Participant spreadsheets.
-  let response =
-    await addParticipantResponse(participantKey, participant, prompt, bucket, duration);
+  await addParticipantResponse(participantKey, participant, prompt, bucket,
+      duration);
 
-  return participant["Status"] != "Completed";
+  return participant["Status"] !== "Completed";
 };
 
 /**
@@ -88,11 +90,11 @@ async function uploadToDirectory(prompt, participantKey, mediaUrl, bucketName) {
  * @param {object} participant Full participant object.
  * @param {string} prompt ID of the prompt being responded to.
  * @param {string} bucket GCP storage bucket name.
- * @param {double} duration Duration in seconds of the audio response.
+ * @param {number} duration Duration in seconds of the audio response.
  */
 async function addParticipantResponse(
-  participantKey, participant, prompt, bucket, duration) {
-  var audioFile = `https://storage.googleapis.com/${bucket}/${prompt}/${participantKey}`;
+    participantKey, participant, prompt, bucket, duration) {
+  const audioFile = `https://storage.googleapis.com/${bucket}/${prompt}/${participantKey}`;
 
   console.log('Updating sheets');
   let sheetsPath = Runtime.getFunctions()['google_sheets_helper'].path;
@@ -113,7 +115,8 @@ async function addParticipantResponse(
 
   participant["Responses"] = parseInt(participant["Responses"]) + 1;
   // Mark completed if this response is the final one, else mark ready.
-  if (parseInt(participant["Responses"]) >= parseInt(participant["Questions"])) {
+  if (parseInt(participant["Responses"]) >= parseInt(
+      participant["Questions"])) {
     participant["Status"] = "Completed";
   } else {
     participant["Status"] = "Ready";
