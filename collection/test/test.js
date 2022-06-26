@@ -6,18 +6,18 @@ describe("Startup tests", () => {
   it("Twilio env keys are set", () => {
     const envVars = require('dotenv').config();
     assert(envVars.parsed,
-        "Please create a file called .env.template in the 'collection' directory");
+        "Please create a file called .env in the 'collection' directory");
     assert(envVars.parsed.ACCOUNT_SID.length > 0,
-        "Please make sure to set ACCOUNT_SID in your .env.template file. "
+        "Please make sure to set ACCOUNT_SID in your .env file. "
         + "Visit the Twilio console to find the value");
     assert(envVars.parsed.AUTH_TOKEN.length > 0,
-        "Please make sure to set AUTH_TOKEN in your .env.template file. "
+        "Please make sure to set AUTH_TOKEN in your .env file. "
         + "Visit the Twilio console to find the value");
   });
   it("Waxal key values are set", () => {
     let varsPath = "./assets/vars.private.json";
     assert(fs.existsSync(varsPath),
-        "Please copy assets/vars.template.private.json to "
+        "Please copy assets/vars.private.json to "
         + "assets/vars.private.json");
     const vars = JSON.parse(
         fs.readFileSync(varsPath).toString());

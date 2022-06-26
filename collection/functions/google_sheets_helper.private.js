@@ -1,7 +1,7 @@
 const {GoogleSpreadsheet} = require('google-spreadsheet');
 const {backOff} = require("exponential-backoff");
 
-// Map of spreadsheets to their key in {@link vars.template.private.json}
+// Map of spreadsheets to their key in {@link vars.private.json}
 const sheetMap = {
   "prompt-sheet": "Prompt",
   "participant-sheet": "Participant",
