@@ -58,7 +58,7 @@ exports.handler = async (context, event, callback) => {
   } catch (e) {
     console.error(e);
     await sendPrompt(context, participantPhone, "",
-        varsHelper.getVar["error-message-audio"]);
+        varsHelper.getVar("error-message-audio"));
   }
   callback(null, event);
 };
