@@ -68,30 +68,22 @@ in the root directory.
 **NOTE**: Make sure these sheets are write-able by your robot user created
 above.
 
-###### participant-sheet
-
-Sheet for participant info. You can make a copy
+* **participant-sheet**: Sheet for participant info. You can make a copy
 of [this file](https://docs.google.com/spreadsheets/d/14wZIBMKUKySrvyw0xU4CmJpDUVtsUsS7DQxZBmaiBuA/edit#gid=0)
 to get started.
 
-###### response-sheet
-
-Sheet where links to participant response audio files will be stored. You can
+* **response-sheet**: Sheet where links to participant response audio files will be stored. You can
 make a copy
 of [this file](https://docs.google.com/spreadsheets/d/14wZIBMKUKySrvyw0xU4CmJpDUVtsUsS7DQxZBmaiBuA/edit#gid=0)
 to get started.
 
-###### prompt-sheet
-
-Sheet containing URLs of images to be used for prompts. You can make a copy
+* **prompt-sheet**: Sheet containing URLs of images to be used for prompts. You can make a copy
 of [this file](https://docs.google.com/spreadsheets/d/14wZIBMKUKySrvyw0xU4CmJpDUVtsUsS7DQxZBmaiBuA/edit#gid=0)
 to get started.
 
 ##### Twilio
 
-###### whatsapp-number
-
-The Twilio Whatsapp
+* **whatsapp-number**: The Twilio Whatsapp
 Sandbox [phone number](https://console.twilio.com/us1/develop/sms/settings/whatsapp-sandbox?frameUrl=%2Fconsole%2Fsms%2Fwhatsapp%2Fsandbox)
 .
 
@@ -102,45 +94,29 @@ provide participants with information about the collection process. The links
 present in those fields are for illustration purposes only but can be used for
 testing.
 
-###### not-registered-audio
-
-An audio file explaining to a user that they are not yet registered for the
+* **not-registered-audio**: An audio file explaining to a user that they are not yet registered for the
 study and providing instructions about how to get registered.
 
-###### voice-note-required-audio
-
-Participants must reply to text prompts with voice notes. If they send a message
+* **voice-note-required-audio**: Participants must reply to text prompts with voice notes. If they send a message
 that doesn't contain audio, this audio will be sent to them.
 
-###### voice-note-too-short-audio
-
-This audio is sent to participants who reply with a voice note that is shorter
+* **voice-note-too-short-audio**: This audio is sent to participants who reply with a voice note that is shorter
 than *min-audio-length-secs*.
 
-###### survey-completed-audio
-
-This audio is played for a user once they have completed the full set of
+* **survey-completed-audio**: This audio is played for a user once they have completed the full set of
 questions.
 
-###### consent-audio
-
-Participants should consent to the usage of their audio before joining the
+* **consent-audio**: Participants should consent to the usage of their audio before joining the
 study. This audio will restate their consent and give them an opportunity to opt
 out.
 
 ##### Misc
 
-###### storage-bucket
+* **storage-bucket**: Then name GCP storage bucket into which audio files will be stored.
 
-Then name GCP storage bucket into which audio files will be stored.
+* **min-audio-length-secs**: Minimum length of audio responses.
 
-###### min-audio-length-secs
-
-Minimum length of audio responses.
-
-###### language
-
-The language of data being collected.
+* **language**: The language of data being collected.
 
 ### Start up waxal server and set it as the webhook endpoint in Twilio
 
