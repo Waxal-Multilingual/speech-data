@@ -10,7 +10,7 @@ This package contains a JS library that works in conjunction with Twilio to
 perform speech data collection using image prompts. The instructions below
 detail how to set up your own collection pipeline using the code.
 
-### Before you start
+## Before you start
 
 1. Sign up for a [Twilio](https://www.twilio.com/) account.
 2. Have available a [Google Cloud](https://console.cloud.google.com/) project
@@ -29,15 +29,15 @@ detail how to set up your own collection pipeline using the code.
 3. Have way to serve websites. For this overview, we will be
    using [ngrok](https://ngrok.com/).
 
-### Prepare to run your Waxal server
+## Prepare to run your Waxal server
 
-#### Install npm
+### Install npm
 
 ```console
 sudo apt-get install npm
 ```
 
-#### Check out the code
+### Check out the code
 
 ```console
 git clone https://github.com/Waxal-Multilingual/speech-data.git
@@ -45,9 +45,9 @@ cd speech-data/collection
 npm install
 ```
 
-#### Set up variables
+### Set up variables
 
-##### Environment variables (.env)
+#### Environment variables (.env)
 
 1. **ACCOUNT_SID=** {Twilio account SID. Can be found in
    the [Twilio Console](https://console.twilio.com/?frameUrl=/console)}
@@ -124,13 +124,14 @@ Your Waxal server will be the endpoint called by Twilio when participants reply
 to your prompts. You will need to deploy your server in a publicly accessible
 way such that Twilio can make RPCs to it.
 
-#### Starting your server locally
+## Run the Waxal Server
+### Start your server locally
 
 To start a local server run ```npm start``` from ```speech-data/collection```.
 Fix any errors that pop up until your server is running. Make note of the
 running port (in most cases it should be 3000).
 
-#### Deploying your server with ngrok
+### Deploy your server with ngrok
 
 Twilio will call your server to process messages from participants. For a quick
 way to get hosted on the open web, you can use [ngrok](https://ngrok.com/).
@@ -144,7 +145,7 @@ ngrok http 3000
 Once the server is up, copy the public URL logged as *Forwarding* in the
 terminal (eg. https://xxx.eu.ngrok.io)
 
-#### Setting the webhook URI in Twilio
+### Set the webhook URI in Twilio
 
 Once you have a public server URL, visit
 the [Twilio Whatsapp Sandbox](https://console.twilio.com/us1/develop/sms/settings/whatsapp-sandbox?frameUrl=%2Fconsole%2Fsms%2Fwhatsapp%2Fsandbox)
@@ -153,6 +154,7 @@ this point, you should be ready to test your collection flow. Example below:
 
 ```https://xxx.ngrok.io/start_flow```
 
+## Run a data collection study
 ### Register a participant and start sending prompts
 
 #### Add to the participant sheet
@@ -181,8 +183,11 @@ https://wa.me/+14155238886?text=join%waxal-speech
 Once users send the message, they will officially be enrolled and can start the
 process by sending **"hi"** to the bot.
 
-### Finding your data
+### Find your audio data
 
 After each response is received, it is stored in your storage bucket under the
 folder ```{promptId}/{participantId}```. A row is also entered in the *Response*
 table with a link to the stored file and columns for the participant and prompt.
+
+### Use the Waxal Manager app to transcribe and translate
+[Waxal Manager](https://www.appsheet.com/Template/AppDef?appName=WaxalManager-4528453-22-06-26) is an example [AppSheet](https://www.appsheet.com/) app that can be used to manage your data collection process. You can clone the app and point to your project's spreadsheets to use it. The app provides views for managing prompts, participants, responses, transcriptions and translations.
