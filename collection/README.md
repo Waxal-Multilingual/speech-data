@@ -190,4 +190,7 @@ folder ```{promptId}/{participantId}```. A row is also entered in the *Response*
 table with a link to the stored file and columns for the participant and prompt.
 
 ### Use the Waxal Manager app to transcribe and translate
+
 [Waxal Manager](https://www.appsheet.com/Template/AppDef?appName=WaxalManager-4528453-22-06-26) is an example [AppSheet](https://www.appsheet.com/) app that can be used to manage your data collection process. You can clone the app and point to your project's spreadsheets to use it. The app provides views for managing prompts, participants, responses, transcriptions and translations.
+
+![alt text](https://github.com/Waxal-Multilingual/speech-data/blob/main/docs/manager.png?raw=true)
