@@ -133,8 +133,10 @@ take note of the URL of the `start_flow` function. Example below:
 
 ### Deploy your server to Twilio
 
-To deploy your server to Twilio, run ```npm deploy```. Take note of the URL of
-the `start_flow` function.
+To deploy your server to Twilio, run ```npm run deploy```. Take note of the URL of
+the `start_flow` function. Example below:
+
+```https://xxx-prod.twil.io/start_flow```
 
 ### Set the webhook URI in Twilio
 
