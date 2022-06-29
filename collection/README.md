@@ -26,8 +26,6 @@ detail how to set up your own collection pipeline using the code.
       with write access granted to the service account
       above ([Instructions here](https://cloud.google.com/storage/docs/access-control/using-iam-permissions))
       .
-3. Have way to serve websites. For this overview, we will be
-   using [ngrok](https://ngrok.com/).
 
 ## Prepare to run your Waxal server
 
@@ -118,41 +116,33 @@ out.
 
 * **language**: The language of data being collected.
 
-### Start up waxal server and set it as the webhook endpoint in Twilio
-
+## Run the Waxal Server
 Your Waxal server will be the endpoint called by Twilio when participants reply
 to your prompts. You will need to deploy your server in a publicly accessible
-way such that Twilio can make RPCs to it.
+way such that Twilio can make RPCs to it. You can either deploy locally with
+Twilio's built in [ngrok](https://ngrok.com/) server or deploy directly to the
+Twilio server.
 
-## Run the Waxal Server
-### Start your server locally
+### Test your server locally
 
 To start a local server run ```npm start``` from ```speech-data/collection```.
-Fix any errors that pop up until your server is running. Make note of the
-running port (in most cases it should be 3000).
+Fix any errors that pop up until your server is running. Once the server is up,
+take note of the URL of the `start_flow` function. Example below:
 
-### Deploy your server with ngrok
+```https://xxx.ngrok.io/start_flow```
 
-Twilio will call your server to process messages from participants. For a quick
-way to get hosted on the open web, you can use [ngrok](https://ngrok.com/).
-Install ngrok and forward your server port from above.
+### Deploy your server to Twilio
 
-```console
-sudo npm install -g ngrok
-ngrok http 3000
-```
-
-Once the server is up, copy the public URL logged as *Forwarding* in the
-terminal (eg. https://xxx.eu.ngrok.io)
+To deploy your server to Twilio, run ```npm deploy```. Take note of the URL of
+the `start_flow` function.
 
 ### Set the webhook URI in Twilio
 
-Once you have a public server URL, visit
+Once you have a public server URL of the `start_flow` function, visit
 the [Twilio Whatsapp Sandbox](https://console.twilio.com/us1/develop/sms/settings/whatsapp-sandbox?frameUrl=%2Fconsole%2Fsms%2Fwhatsapp%2Fsandbox)
-page and set the *WHEN A MESSAGE COMES IN* field to your full ngrok public URL with the path `/start_flow`. After
-this point, you should be ready to test your collection flow. Example below:
+page and set the *WHEN A MESSAGE COMES IN* field to that URL. After this point,
+you should be ready to test your collection flow.
 
-```https://xxx.ngrok.io/start_flow```
 
 ## Run a data collection study
 ### Register a participant and start sending prompts
@@ -189,7 +179,7 @@ After each response is received, it is stored in your storage bucket under the
 folder ```{promptId}/{participantId}```. A row is also entered in the *Response*
 table with a link to the stored file and columns for the participant and prompt.
 
-### Use the Waxal Manager app to transcribe and translate
+## Use the Waxal Manager app to transcribe and translate
 
 [Waxal Manager](https://www.appsheet.com/Template/AppDef?appName=WaxalManager-4528453-22-06-26) is an example [AppSheet](https://www.appsheet.com/) app that can be used to manage your data collection process. You can clone the app and point to your project's spreadsheets to use it. The app provides views for managing prompts, participants, responses, transcriptions and translations.
 
