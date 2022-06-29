@@ -5,7 +5,6 @@ let promptHelper = require(promptPath);
 
 let varsPath = Runtime.getFunctions()['vars_helper'].path;
 let varsHelper = require(varsPath);
-const {sendPrompt} = require('./messaging/send_prompt.private');
 
 /**
  * Main entrypoint for Waxal workflow.
@@ -57,7 +56,7 @@ exports.handler = async (context, event, callback) => {
     }
   } catch (e) {
     console.error(e);
-    await sendPrompt(context, participantPhone, "",
+    await promptHelper.sendPrompt(context, participantPhone, "",
         varsHelper.getVar("error-message-audio"));
   }
   callback(null, event);

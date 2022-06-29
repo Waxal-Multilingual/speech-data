@@ -5,7 +5,7 @@
   "scripts": {
     "test": "",
     "start": "bash start.sh",
-    "deploy": "twilio-run deploy",
+    "deploy": "twilio-run deploy --environment=prod",
     "postinstall": "bash post_install.sh"
   },
   "dependencies": {

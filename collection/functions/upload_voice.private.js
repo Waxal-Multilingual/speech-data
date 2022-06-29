@@ -25,7 +25,7 @@ let promptHelper = require(promptPath);
  * @param {*} context Twilio client context.
  * @param {string} prompt ID of the prompt being responded to.
  * @param {string} mediaUrl URL of the audio sent by the user.
- * @param {string} participant ID of the responding participant.
+ * @param {object} participant ID of the responding participant.
  * @returns a bool indicating whether to continue sending prompts.
  */
 exports.uploadVoice = async (context, prompt, mediaUrl, participant) => {
