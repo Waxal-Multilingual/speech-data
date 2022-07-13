@@ -5,10 +5,11 @@
   "scripts": {
     "test": "",
     "start": "bash start.sh",
-    "deploy": "twilio-run deploy --environment=prod",
+    "deploy": "mocha --recursive --exit && twilio-run deploy --override-existing-project --environment=prod",
     "postinstall": "bash post_install.sh"
   },
   "dependencies": {
+    "@google-cloud/service-usage": "^2.0.0",
     "@google-cloud/storage": "^6.1.0",
     "@twilio/runtime-handler": "1.2.3",
     "dotenv": "^16.0.1",
