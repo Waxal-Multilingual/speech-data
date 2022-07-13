@@ -76,7 +76,7 @@ of [this file](https://docs.google.com/spreadsheets/d/1Zb5eifySYaQ9eDdmOC133bo1U
 to get started.
 
 * **prompt-sheet**: Sheet containing URLs of images to be used for prompts. You can make a copy
-of [this file](https://docs.google.com/spreadsheets/d/YuH9cXMbWRcHpZFFfP3z27e_NyjB0Bk/edit#gid=0)
+of [this file](https://docs.google.com/spreadsheets/d/1468gA4cFf74-YuH9cXMbWRcHpZFFfP3z27e_NyjB0Bk/edit#gid=0)
 to get started.
 
 ##### Twilio
