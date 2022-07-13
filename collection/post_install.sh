@@ -1,2 +1,2 @@
-cp .env.template .env
-cp assets/vars.template.private.json assets/vars.private.json
+mv .env.template .env
+mv assets/vars.template.private.json assets/vars.private.json
