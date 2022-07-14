@@ -82,7 +82,7 @@ async function handlePromptResponse(context, lastPrompt, body, mediaUrl,
   if (participant['Type'] === "Transcriber") {
     // Notify the user if they send a message that doesn't contain text.
     if (!body) {
-      let msg = varsHelper.getVar("text-required");
+      let msg = varsHelper.getVar("transcription-instructions");
       console.log("User did not include transcription text");
       await promptHelper.sendPrompt(context, participant["Phone"], msg);
       return;

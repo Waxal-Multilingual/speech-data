@@ -67,8 +67,7 @@ describe("Startup tests", () => {
     const vars = extractVars();
     for (const key in vars) {
       assert(vars[key].length !== 0, `key ${key} is required. For more information, please refer to 
-          documentation at https://github.com/Waxal-Multilingual/
-          speech-data/blob/main/collection/README.md`)
+          documentation at https://github.com/Waxal-Multilingual/speech-data/tree/main/collection#set-up-variables`)
     }
   });
   it("Service account private key set", () => {

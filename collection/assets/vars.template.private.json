@@ -9,12 +9,11 @@
   "transcriptions-per-response": "2",
   "speech-language": "wolof",
   "transcription-language": "english",
-  "transcription-instructions": "Please listen to the following audio and respond with an exact English transcription",
+  "transcription-instructions": "Please listen to the following audio and respond with an exact English transcription (text). If you have already responded to an audio file, please copy and re-send the same audio",
   "not-registered-audio": "https://drive.google.com/uc?export=download&id=12SA9BRTaxGmAtmTkAnWfswSVnUc81Wp5",
   "voice-note-required-audio": "https://drive.google.com/uc?export=download&id=1sfGSvMEz1LfbMj4Us5NnuRFl0qKbv5EP",
   "voice-note-too-short-audio": "https://drive.google.com/uc?export=download&id=1CEA-PSp0I8qQltwwwmoM8J19K14Nn4EJ",
   "survey-completed-audio": "https://drive.google.com/uc?export=download&id=1QMziHm2ZZyO3eVfMULRPAcPJC7WNKivF",
   "consent-audio": "https://drive.google.com/uc?export=download&id=1egcDHMk0NFJj96dveqK-29Yu9J9hGqdd",
-  "error-message-audio": "https://drive.google.com/uc?export=download&id=1_1TQ7GdjZsWPr-cSsKM4EO6Cy92xqrIX",
-  "text-required": "https://drive.google.com/uc?export=download&id=1EHAWTUNo1o18E1ld-EMl-TckiLW3RIVb"
+  "error-message-audio": "https://drive.google.com/uc?export=download&id=1_1TQ7GdjZsWPr-cSsKM4EO6Cy92xqrIX"
 }
