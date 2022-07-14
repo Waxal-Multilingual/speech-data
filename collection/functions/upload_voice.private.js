@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const got = require('got');
 const mm = require('music-metadata');
+const uuid = require("uuid");
 
 const tmp_dir = require('os').tmpdir();
 const PUBLIC_DIR = `${tmp_dir}/mms_images`;
@@ -25,7 +26,7 @@ let promptHelper = require(promptPath);
  * @param {string} prompt ID of the prompt being responded to.
  * @param {string} mediaUrl URL of the audio sent by the user.
  * @param {object} participant ID of the responding participant.
- * @returns a bool indicating whether to continue sending prompts.
+ * @returns a bool indicating whetherlet uuid = require("uuid"); to continue sending prompts.
  */
 exports.uploadVoice = async (context, prompt, mediaUrl, participant) => {
   const stream = got.stream(mediaUrl)
@@ -88,13 +89,13 @@ async function uploadToDirectory(prompt, participantKey, mediaUrl, bucketName) {
  * Update Response and Participant tables after uploading media.
  * @param {string} participantKey ID of the participant.
  * @param {object} participant Full participant object.
- * @param {string} prompt ID of the prompt being responded to.
+ * @param {string} promptKey ID of the prompt being responded to.
  * @param {string} bucket GCP storage bucket name.
  * @param {number} duration Duration in seconds of the audio response.
  */
 async function addParticipantResponse(
-    participantKey, participant, prompt, bucket, duration) {
-  const audioFile = `https://storage.googleapis.com/${bucket}/${prompt}/${participantKey}.ogg`;
+    participantKey, participant, promptKey, bucket, duration) {
+  const audioFile = `https://storage.googleapis.com/${bucket}/${promptKey}/${participantKey}.ogg`;
 
   console.log('Adding response to sheet');
   let sheetsPath = Runtime.getFunctions()['google_sheets_helper'].path;
@@ -104,26 +105,16 @@ async function addParticipantResponse(
   // Add response row.
   console.log("Adding response row");
   await sheet.addRow({
+    'Key': uuid.v4(),
     'Participant': participantKey,
-    'Prompt': prompt,
+    'Prompt': promptKey,
     'Audio': audioFile,
     'Timestamp': new Date().toUTCString(),
     'Status': 'New',
     'Duration': duration,
-    'Language': varsHelper.getVar("language"),
+    'Language': varsHelper.getVar("speech-language"),
     'Response Date': new Date().toISOString().substring(0, 10)
   });
-
-  participant["Responses"] = parseInt(participant["Responses"]) + 1;
-  // Mark completed if this response is the final one, else mark ready.
-  if (parseInt(participant["Responses"]) >= parseInt(
-      participant["Questions"])) {
-    participant["Status"] = "Completed";
-  } else {
-    participant["Status"] = "Ready";
-  }
-  console.log(`Setting participant status to ${participant["Status"]}`);
-  await participant.save();
 }
 
 /**

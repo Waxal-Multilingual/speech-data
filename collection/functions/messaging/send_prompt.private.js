@@ -5,7 +5,7 @@ const {backOff} = require("exponential-backoff");
  * @param context Twilio client context.
  * @param recipient {string} Recipient phone number including country code.
  * @param text {string} Text context of message.
- * @param media {string} URL of audio or image media to be sent.
+ * @param [media] {string} URL of audio or image media to be sent.
  * @return {Promise<void>}
  */
 exports.sendPrompt = async (context, recipient, text, media) => {

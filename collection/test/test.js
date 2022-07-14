@@ -98,6 +98,7 @@ describe("Startup tests", () => {
     await checkSheet(vars, key, "participant-sheet");
     await checkSheet(vars, key, "response-sheet");
     await checkSheet(vars, key, "prompt-sheet");
+    await checkSheet(vars, key, "transcription-sheet");
   }).timeout(150000);
 
   it("Audio files accessible to twilio", async () => {
@@ -109,8 +110,9 @@ describe("Startup tests", () => {
     for (const audioVar of audioVars) {
       const drive = google.drive({version: 'v3', auth: jwt});
 
+      let fileId = url.parse(vars[audioVar], true).query["id"];
       const permissions = await drive.files.get({
-        fileId: url.parse(vars[audioVar], true).query["id"], fields: '*'
+        fileId: fileId, fields: '*'
       });
 
       assert(permissions.data.capabilities.canDownload,

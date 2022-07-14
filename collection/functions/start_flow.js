@@ -1,8 +1,8 @@
-let promptPath = Runtime.getFunctions()['messaging/send_prompt'].path;
-let promptHelper = require(promptPath);
-
-let varsPath = Runtime.getFunctions()['vars_helper'].path;
-let varsHelper = require(varsPath);
+let promptHelper = require(
+    Runtime.getFunctions()['messaging/send_prompt'].path);
+let varsHelper = require(Runtime.getFunctions()['vars_helper'].path);
+let transcriptionHelper = require(
+    Runtime.getFunctions()['transcription'].path);
 
 /**
  * Main entrypoint for Waxal workflow.
@@ -27,14 +27,20 @@ exports.handler = async (context, event, callback) => {
       if (status === "Consented") {
         // Send consent audio for first timers.
         console.log("Sending consent message");
-        let audio = varsHelper.getVar("consent-audio");
-        await promptHelper.sendPrompt(context, participantPhone, "", audio);
+        if (participant['Type'] === 'Transcriber') {
+          let text = varsHelper.getVar("transcription-instructions");
+          await promptHelper.sendPrompt(context, participantPhone, text);
+        } else {
+          let audio = varsHelper.getVar("consent-audio");
+          await promptHelper.sendPrompt(context, participantPhone, "", audio);
+        }
       }
       if (status === "Prompted") {
         // Expect a response for prompted users.
         let lastPrompt = participant["Last Prompt"];
         await handlePromptResponse(
-            context, lastPrompt, event['MediaUrl0'], participant);
+            context, lastPrompt, event['Body'], event['MediaUrl0'],
+            participant);
       } else if (status === "Ready" || status === "Consented") {
         // Send the first image for consented and ready users.
         await handleSendPrompt(context, participant);
@@ -66,23 +72,38 @@ exports.handler = async (context, event, callback) => {
  * Handles the case where the user has been prompted and is expected to send a response.
  * @param {object} context contains Twilio client context.
  * @param {string} lastPrompt the ID of the last prompt the participant received.
+ * @param {string} body Text content of participant message.
  * @param {string} mediaUrl the URL of the media contained in the participant's message.
  * @param {object} participant the current participant.
  * @returns
  */
-async function handlePromptResponse(context, lastPrompt, mediaUrl,
+async function handlePromptResponse(context, lastPrompt, body, mediaUrl,
     participant) {
-  // Notify the user if they send a message that doesn't contain audio.
-  if (!mediaUrl) {
-    let audio = varsHelper.getVar("voice-note-required-audio");
-    console.log("User did not include voice note");
-    await promptHelper.sendPrompt(context, participant["Phone"], "", audio);
-    return;
+  if (participant['Type'] === "Transcriber") {
+    // Notify the user if they send a message that doesn't contain text.
+    if (!body) {
+      let msg = varsHelper.getVar("text-required");
+      console.log("User did not include transcription text");
+      await promptHelper.sendPrompt(context, participant["Phone"], msg);
+      return;
+    }
+    await transcriptionHelper.addTranscription(
+        participant["Key"],
+        lastPrompt, body);
+  } else {
+    // Notify the user if they send a message that doesn't contain audio.
+    if (!mediaUrl) {
+      let audio = varsHelper.getVar("voice-note-required-audio");
+      console.log("User did not include voice note");
+      await promptHelper.sendPrompt(context, participant["Phone"], "", audio);
+      return;
+    }
+    let uploadPath = Runtime.getFunctions()['upload_voice'].path;
+    let uploadHelper = require(uploadPath);
+    await uploadHelper.uploadVoice(
+        context, lastPrompt, mediaUrl, participant);
   }
-  let uploadPath = Runtime.getFunctions()['upload_voice'].path;
-  let uploadHelper = require(uploadPath);
-  let proceed = await uploadHelper.uploadVoice(
-      context, lastPrompt, mediaUrl, participant);
+  const proceed = await updateParticipantAfterResponse(participant);
   if (proceed) {
     // Send next prompt.
     console.log("User not yet done. Sending next prompt");
@@ -92,27 +113,49 @@ async function handlePromptResponse(context, lastPrompt, mediaUrl,
   }
 }
 
+async function updateParticipantAfterResponse(participant) {
+  participant["Responses"] = parseInt(participant["Responses"]) + 1;
+  // Mark completed if this response is the final one, else mark ready.
+  if (parseInt(participant["Responses"]) >= parseInt(
+      participant["Questions"])) {
+    participant["Status"] = "Completed";
+  } else {
+    participant["Status"] = "Ready";
+  }
+  console.log(`Setting participant status to ${participant["Status"]}`);
+  await participant.save();
+  return participant["Status"] !== "Completed";
+}
+
 /**
  * Handles the case where the user is ready for the next prompt.
  * @param {object} context contains Twilio client context.
  * @param {object} participant the current participant.
  */
 async function handleSendPrompt(context, participant) {
-  let fetchPath = Runtime.getFunctions()['prompt_fetch'].path;
-  let fetchHelper = require(fetchPath);
-  let response = await fetchHelper.getNextPrompt(participant['Key']);
-  let prompt = response['prompt'];
-  let position = response['position'];
+  let promptFetchHelper = require(Runtime.getFunctions()['prompt_fetch'].path);
+
+  const isTranscription = participant['Type'] === 'Transcriber';
+
+  let fetchedPrompt = isTranscription ?
+      await transcriptionHelper.getNextPrompt(participant['Key'],
+          participant["Language"])
+      : await promptFetchHelper.getNextPrompt(participant['Key']);
+
+  let prompt = fetchedPrompt['prompt'];
+  let position = fetchedPrompt['position'];
 
   let positionString = `${position}/${participant["Questions"]}`;
 
-  console.log(`Sending prompt image ${prompt['Image']}`);
+  const mediaType = isTranscription ? 'audio' : 'image';
+
+  console.log(`Sending prompt ${mediaType} ${prompt}`);
   await promptHelper.sendPrompt(
-      context, participant["Phone"], positionString, prompt['Image']);
-  console.log(`Done sending prompt image ${prompt['Image']}`);
+      context, participant["Phone"], positionString, prompt);
+  console.log(`Done sending prompt ${mediaType} ${prompt}`);
 
   participant["Status"] = "Prompted";
-  participant["Last Prompt"] = prompt["Key"];
+  participant["Last Prompt"] = fetchedPrompt["key"];
 
   console.log(`Setting participant status to "Prompted"`);
   await participant.save();
