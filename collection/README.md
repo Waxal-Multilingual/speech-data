@@ -169,7 +169,7 @@ is ```join waxal-speech```, and your sandbox phone number is ```+14155238886```
 you can send them the URL
 
 ```
-https://wa.me/+14155238886?text=join%waxal-speech
+https://wa.me/+14155238886?text=join%20waxal-speech
 ```
 
 Once users send the message, they will officially be enrolled and can start the
