@@ -26,6 +26,7 @@ exports.handler = async (context, event, callback) => {
       let status = participant["Status"];
       if (status === "Consented") {
         // Send consent audio for first timers.
+        console.log("Sending consent message");
         let audio = varsHelper.getVar("consent-audio");
         await promptHelper.sendPrompt(context, participantPhone, "", audio);
       }
@@ -49,6 +50,7 @@ exports.handler = async (context, event, callback) => {
 
     } else {
       // Notify the user that they need to register first.
+      console.log('Participant not registered')
       let audio = varsHelper.getVar("not-registered-audio");
       await promptHelper.sendPrompt(context, participantPhone, "", audio);
     }
