@@ -4,8 +4,7 @@
  * @returns An object with a prompt and the number of seen prompts including the fetched one.
  */
 exports.getNextPrompt = async (participantKey) => {
-  let path = Runtime.getFunctions()['google_sheets_helper'].path;
-  let helper = require(path);
+  let helper = require(Runtime.getFunctions()['google_sheets_helper'].path);
 
   // Identify used prompts.
   let responseSheet = await helper.getResponseSheet();
@@ -17,9 +16,13 @@ exports.getNextPrompt = async (participantKey) => {
   // Find unused prompts.
   let promptSheet = await helper.getPromptSheet();
   let prompts = (await promptSheet.getRows()).filter(
-      row => !usedPrompts.has(row));
+      row => !usedPrompts.has(row['Key']));
 
   // Pick a random index among the unused prompts.
   const random = Math.floor(Math.random() * prompts.length);
-  return {"prompt": prompts[random], "position": usedPrompts.size + 1};
+  return {
+    "key": prompts[random]['Key'],
+    "prompt": prompts[random]['Image'],
+    "position": usedPrompts.size + 1
+  };
 }

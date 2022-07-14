@@ -67,8 +67,7 @@ describe("Startup tests", () => {
     const vars = extractVars();
     for (const key in vars) {
       assert(vars[key].length !== 0, `key ${key} is required. For more information, please refer to 
-          documentation at https://github.com/Waxal-Multilingual/
-          speech-data/blob/main/collection/README.md`)
+          documentation at https://github.com/Waxal-Multilingual/speech-data/tree/main/collection#set-up-variables`)
     }
   });
   it("Service account private key set", () => {
@@ -98,6 +97,7 @@ describe("Startup tests", () => {
     await checkSheet(vars, key, "participant-sheet");
     await checkSheet(vars, key, "response-sheet");
     await checkSheet(vars, key, "prompt-sheet");
+    await checkSheet(vars, key, "transcription-sheet");
   }).timeout(150000);
 
   it("Audio files accessible to twilio", async () => {
@@ -109,8 +109,9 @@ describe("Startup tests", () => {
     for (const audioVar of audioVars) {
       const drive = google.drive({version: 'v3', auth: jwt});
 
+      let fileId = url.parse(vars[audioVar], true).query["id"];
       const permissions = await drive.files.get({
-        fileId: url.parse(vars[audioVar], true).query["id"], fields: '*'
+        fileId: fileId, fields: '*'
       });
 
       assert(permissions.data.capabilities.canDownload,

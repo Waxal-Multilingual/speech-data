@@ -67,23 +67,29 @@ in the root directory.
 above.
 
 * **participant-sheet**: Sheet for participant info. You can make a copy
-of [this file](https://docs.google.com/spreadsheets/d/14wZIBMKUKySrvyw0xU4CmJpDUVtsUsS7DQxZBmaiBuA/edit#gid=0)
-to get started.
+  of [this file](https://docs.google.com/spreadsheets/d/14wZIBMKUKySrvyw0xU4CmJpDUVtsUsS7DQxZBmaiBuA/edit#gid=0)
+  to get started.
 
-* **response-sheet**: Sheet where links to participant response audio files will be stored. You can
-make a copy
-of [this file](https://docs.google.com/spreadsheets/d/1Zb5eifySYaQ9eDdmOC133bo1Ut8FgfzxNQZL4m9gjB8/edit#gid=0)
-to get started.
+* **response-sheet**: Sheet where links to participant response audio files will
+  be stored. You can make a copy
+  of [this file](https://docs.google.com/spreadsheets/d/1Zb5eifySYaQ9eDdmOC133bo1Ut8FgfzxNQZL4m9gjB8/edit#gid=0)
+  to get started.
 
-* **prompt-sheet**: Sheet containing URLs of images to be used for prompts. You can make a copy
-of [this file](https://docs.google.com/spreadsheets/d/1468gA4cFf74-YuH9cXMbWRcHpZFFfP3z27e_NyjB0Bk/edit#gid=0)
-to get started.
+* **prompt-sheet**: Sheet containing URLs of images to be used for prompts. You
+  can make a copy
+  of [this file](https://docs.google.com/spreadsheets/d/1468gA4cFf74-YuH9cXMbWRcHpZFFfP3z27e_NyjB0Bk/edit#gid=0)
+  to get started.
+
+* **transcription-sheet**: Sheet where transcriptions will be stored. You can
+  make a copy
+  of [this file](https://docs.google.com/spreadsheets/d/1MKzliEHKdHNJ00pwaObyhhTOGP7rMJN8QJOnQxgCMxk/edit#gid=0)
+  to get started.
 
 ##### Twilio
 
 * **whatsapp-number**: The Twilio Whatsapp
-Sandbox [phone number](https://console.twilio.com/us1/develop/sms/settings/whatsapp-sandbox?frameUrl=%2Fconsole%2Fsms%2Fwhatsapp%2Fsandbox)
-.
+  Sandbox [phone number](https://console.twilio.com/us1/develop/sms/settings/whatsapp-sandbox?frameUrl=%2Fconsole%2Fsms%2Fwhatsapp%2Fsandbox)
+  .
 
 ##### Audio Prompts
 
@@ -92,31 +98,49 @@ provide participants with information about the collection process. The links
 present in those fields are for illustration purposes only but can be used for
 testing.
 
-* **not-registered-audio**: An audio file explaining to a user that they are not yet registered for the
-study and providing instructions about how to get registered.
+* **not-registered-audio**: An audio file explaining to a user that they are not
+  yet registered for the study and providing instructions about how to get
+  registered.
 
-* **voice-note-required-audio**: Participants must reply to text prompts with voice notes. If they send a message
-that doesn't contain audio, this audio will be sent to them.
+* **voice-note-required-audio**: Participants must reply to text prompts with
+  voice notes. If they send a message that doesn't contain audio, this audio
+  will be sent to them.
 
-* **voice-note-too-short-audio**: This audio is sent to participants who reply with a voice note that is shorter
-than *min-audio-length-secs*.
+* **voice-note-too-short-audio**: This audio is sent to participants who reply
+  with a voice note that is shorter than *min-audio-length-secs*.
 
-* **survey-completed-audio**: This audio is played for a user once they have completed the full set of
-questions.
+* **survey-completed-audio**: This audio is played for a user once they have
+  completed the full set of questions.
 
-* **consent-audio**: Participants should consent to the usage of their audio before joining the
-study. This audio will restate their consent and give them an opportunity to opt
-out.
+* **consent-audio**: Participants should consent to the usage of their audio
+  before joining the study. This audio will restate their consent and give them
+  an opportunity to opt out.
+
+* **error-message-audio**: This audio is played for a user once they have
+  completed the full set of questions.
 
 ##### Misc
 
-* **storage-bucket**: Then name GCP storage bucket into which audio files will be stored.
+* **storage-bucket**: Then name GCP storage bucket into which audio files will
+  be stored.
 
 * **min-audio-length-secs**: Minimum length of audio responses.
 
-* **language**: The language of data being collected.
+* **transcriptions-per-response**: Number of transcriptions per response (per
+  language).
+
+* **speech-language**: The language of speech data being collected. Currently,
+  speech samples can only be collected for a single language per Waxal server.
+
+* **transcription-language**: The language of transcription data being
+  collected. Currently, transcription can only be done in 1 language at a time
+  per Waxal server.
+
+* **transcription-instructions**: Text instructions written in *
+  transcription-language* instructing users to transcribe received audio.
 
 ## Run the Waxal Server
+
 Your Waxal server will be the endpoint called by Twilio when participants reply
 to your prompts. You will need to deploy your server in a publicly accessible
 way such that Twilio can make RPCs to it. You can either deploy locally with
@@ -133,8 +157,8 @@ take note of the URL of the `start_flow` function. Example below:
 
 ### Deploy your server to Twilio
 
-To deploy your server to Twilio, run ```npm run deploy```. Take note of the URL of
-the `start_flow` function. Example below:
+To deploy your server to Twilio, run ```npm run deploy```. Take note of the URL
+of the `start_flow` function. Example below:
 
 ```https://xxx-prod.twil.io/start_flow```
 
@@ -145,8 +169,8 @@ the [Twilio Whatsapp Sandbox](https://console.twilio.com/us1/develop/sms/setting
 page and set the *WHEN A MESSAGE COMES IN* field to that URL. After this point,
 you should be ready to test your collection flow.
 
-
 ## Run a data collection study
+
 ### Register a participant and start sending prompts
 
 #### Add to the participant sheet
@@ -176,22 +200,34 @@ Once users send the message, they will officially be enrolled and can start the
 process by sending **"hi"** to the bot.
 
 #### Automate user registration
-In a live study, you may want to automatically register users once they have completed the consent form. To see an example of this, take a look at the [example form](https://docs.google.com/forms/d/1V7qz6agNkI4zOAQxksi7mMdFFTIy0lTWBGfRvTSbUw8/edit) and [Apps Script Trigger](https://script.google.com/home/projects/18Bj3X4FranYU-ug4dfvfgLDqU6X8axWZythDT29gW8sBRfVd3krmJiDV/edit).
 
-This form installs a submit trigger that adds participants to the Particpant sheet and also provides a shortcut to pre-populate the sandbox registration Whatsapp message. Feel free to make a copy of the form for your study.
+In a live study, you may want to automatically register users once they have
+completed the consent form. To see an example of this, take a look at
+the [example form](https://docs.google.com/forms/d/1V7qz6agNkI4zOAQxksi7mMdFFTIy0lTWBGfRvTSbUw8/edit)
+and [Apps Script Trigger](https://script.google.com/home/projects/18Bj3X4FranYU-ug4dfvfgLDqU6X8axWZythDT29gW8sBRfVd3krmJiDV/edit)
+.
+
+This form installs a submit trigger that adds participants to the Particpant
+sheet and also provides a shortcut to pre-populate the sandbox registration
+Whatsapp message. Feel free to make a copy of the form for your study.
 
 The 2 key parts of the form to update are:
 
-1. Setting the correct participant sheet ID on line 13 of the [trigger](https://script.google.com/home/projects/18Bj3X4FranYU-ug4dfvfgLDqU6X8axWZythDT29gW8sBRfVd3krmJiDV/edit):
+1. Setting the correct participant sheet ID on line 13 of
+   the [trigger](https://script.google.com/home/projects/18Bj3X4FranYU-ug4dfvfgLDqU6X8axWZythDT29gW8sBRfVd3krmJiDV/edit):
+
 ```
 var sheet = SpreadsheetApp.openById("[your_participant_sheet_id]").getSheetByName("Participant")
 ```
-2. Setting a confirmation message that provides the correct sandbox registration message template (Under [Settings](https://docs.google.com/forms/d/1V7qz6agNkI4zOAQxksi7mMdFFTIy0lTWBGfRvTSbUw8/edit#settings) -> Presentation -> Confirmation Message)
+
+2. Setting a confirmation message that provides the correct sandbox registration
+   message template (
+   Under [Settings](https://docs.google.com/forms/d/1V7qz6agNkI4zOAQxksi7mMdFFTIy0lTWBGfRvTSbUw8/edit#settings)
+   -> Presentation -> Confirmation Message)
 
 ```
 Your consent has been recorded. Please follow the following link on your phone to register: https://wa.me/+14155238886?text=join%20[your_sandbox_code]
 ```
-
 
 ### Find your audio data
 
@@ -199,8 +235,22 @@ After each response is received, it is stored in your storage bucket under the
 folder ```{promptId}/{participantId}```. A row is also entered in the *Response*
 table with a link to the stored file and columns for the participant and prompt.
 
+### Collect transcriptions of your audio data
+
+Once you have concluded the speech collection phase of your study, you can use
+Waxal to crowd-source transcriptions via Whatsapp. To add a transcriber, simply
+set their *Type* column to **"Transcriber".**
+
+Text transcription responses will be written to the *transcription-sheet*
+file ([eg.](https://docs.google.com/spreadsheets/d/1MKzliEHKdHNJ00pwaObyhhTOGP7rMJN8QJOnQxgCMxk/edit#gid=0))
+.
+
 ## Use the Waxal Manager app to transcribe and translate
 
-[Waxal Manager](https://www.appsheet.com/Template/AppDef?appName=WaxalManager-4528453-22-06-26) is an example [AppSheet](https://www.appsheet.com/) app that can be used to manage your data collection process. You can clone the app and point to your project's spreadsheets to use it. The app provides views for managing prompts, participants, responses, transcriptions and translations.
+[Waxal Manager](https://www.appsheet.com/Template/AppDef?appName=WaxalManager-4528453-22-06-26)
+is an example [AppSheet](https://www.appsheet.com/) app that can be used to
+manage your data collection process. You can clone the app and point to your
+project's spreadsheets to use it. The app provides views for managing prompts,
+participants, responses, transcriptions and translations.
 
 ![alt text](https://github.com/Waxal-Multilingual/speech-data/blob/main/docs/manager.png?raw=true)

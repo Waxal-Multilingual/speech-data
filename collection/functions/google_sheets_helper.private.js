@@ -5,7 +5,8 @@ const {backOff} = require("exponential-backoff");
 exports.sheetMap = {
   "prompt-sheet": "Prompt",
   "participant-sheet": "Participant",
-  "response-sheet": "Response"
+  "response-sheet": "Response",
+  "transcription-sheet": "Transcription"
 }
 
 /**
@@ -55,4 +56,11 @@ exports.getResponseSheet = async () => {
  */
 exports.getParticipantSheet = async () => {
   return getSheet("participant-sheet");
+}
+
+/**
+ * Fetch the Transcription spreadsheet.
+ */
+exports.getTranscriptionSheet = async () => {
+  return getSheet("transcription-sheet");
 }
