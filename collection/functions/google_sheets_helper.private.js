@@ -2,7 +2,7 @@ const {GoogleSpreadsheet} = require('google-spreadsheet');
 const {backOff} = require("exponential-backoff");
 
 // Map of spreadsheets to their key in {@link vars.private.json}
-const sheetMap = {
+exports.sheetMap = {
   "prompt-sheet": "Prompt",
   "participant-sheet": "Participant",
   "response-sheet": "Response"
@@ -27,11 +27,13 @@ async function getSheet(sheet) {
 
   await backOff(() => doc.useServiceAccountAuth(authHelper.loadPrivateKey()));
 
-  console.log(`Fetching ${sheetMap[sheet]}`);
-
+  console.log(
+      `Fetching ${exports.sheetMap[sheet]} sheet with ID ${doc.spreadsheetId}`);
   await doc.loadInfo();
+  console.log(
+      `Done fetching ${exports.sheetMap[sheet]} sheet with ID ${doc.spreadsheetId}`);
 
-  return doc.sheetsByTitle[sheetMap[sheet]];
+  return doc.sheetsByTitle[exports.sheetMap[sheet]];
 }
 
 /**

@@ -2,7 +2,6 @@ const {Storage} = require('@google-cloud/storage');
 const fetch = require('node-fetch');
 const fs = require('fs');
 const path = require('path');
-const {backOff} = require("exponential-backoff");
 const got = require('got');
 const mm = require('music-metadata');
 
@@ -64,6 +63,7 @@ exports.uploadVoice = async (context, prompt, mediaUrl, participant) => {
  * @param {string} bucketName GCP storage bucket being saved to.
  */
 async function uploadToDirectory(prompt, participantKey, mediaUrl, bucketName) {
+  console.log('Uploading response audio');
   const fullPath = path.resolve(`${PUBLIC_DIR}/${participantKey}`);
   const fileStream = fs.createWriteStream(fullPath);
 
@@ -76,7 +76,7 @@ async function uploadToDirectory(prompt, participantKey, mediaUrl, bucketName) {
 
   // Upload to storage bucket/{prompt}/{participant}.
   await bucket.upload(fullPath, {
-    destination: prompt + "/" + participantKey,
+    destination: prompt + "/" + participantKey + ".ogg",
     gzip: true,
     metadata: {
       cacheControl: 'public, max-age=31536000'
@@ -94,14 +94,15 @@ async function uploadToDirectory(prompt, participantKey, mediaUrl, bucketName) {
  */
 async function addParticipantResponse(
     participantKey, participant, prompt, bucket, duration) {
-  const audioFile = `https://storage.googleapis.com/${bucket}/${prompt}/${participantKey}`;
+  const audioFile = `https://storage.googleapis.com/${bucket}/${prompt}/${participantKey}.ogg`;
 
-  console.log('Updating sheets');
+  console.log('Adding response to sheet');
   let sheetsPath = Runtime.getFunctions()['google_sheets_helper'].path;
   let sheetsHelper = require(sheetsPath);
   let sheet = await sheetsHelper.getResponseSheet();
 
   // Add response row.
+  console.log("Adding response row");
   await sheet.addRow({
     'Participant': participantKey,
     'Prompt': prompt,
@@ -121,7 +122,8 @@ async function addParticipantResponse(
   } else {
     participant["Status"] = "Ready";
   }
-  await backOff(() => participant.save());
+  console.log(`Setting participant status to ${participant["Status"]}`);
+  await participant.save();
 }
 
 /**

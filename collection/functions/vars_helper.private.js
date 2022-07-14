@@ -6,9 +6,6 @@ const fs = require('fs');
  * @return {string} value of the requested variable.
  */
 exports.getVar = (varName) => {
-  const varValue = JSON.parse(
-      fs.readFileSync(
-          Runtime.getAssets()["/vars.json"].path).toString())[varName];
   return JSON.parse(
       fs.readFileSync(
           Runtime.getAssets()["/vars.json"].path).toString())[varName];

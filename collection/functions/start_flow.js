@@ -1,5 +1,3 @@
-const {backOff} = require("exponential-backoff");
-
 let promptPath = Runtime.getFunctions()['messaging/send_prompt'].path;
 let promptHelper = require(promptPath);
 
@@ -55,7 +53,7 @@ exports.handler = async (context, event, callback) => {
       await promptHelper.sendPrompt(context, participantPhone, "", audio);
     }
   } catch (e) {
-    console.error(e);
+    console.log(e);
     await promptHelper.sendPrompt(context, participantPhone, "",
         varsHelper.getVar("error-message-audio"));
   }
@@ -75,6 +73,7 @@ async function handlePromptResponse(context, lastPrompt, mediaUrl,
   // Notify the user if they send a message that doesn't contain audio.
   if (!mediaUrl) {
     let audio = varsHelper.getVar("voice-note-required-audio");
+    console.log("User did not include voice note");
     await promptHelper.sendPrompt(context, participant["Phone"], "", audio);
     return;
   }
@@ -84,7 +83,10 @@ async function handlePromptResponse(context, lastPrompt, mediaUrl,
       context, lastPrompt, mediaUrl, participant);
   if (proceed) {
     // Send next prompt.
+    console.log("User not yet done. Sending next prompt");
     await handleSendPrompt(context, participant);
+  } else {
+    console.log("User has completed all prompts");
   }
 }
 
@@ -102,11 +104,16 @@ async function handleSendPrompt(context, participant) {
 
   let positionString = `${position}/${participant["Questions"]}`;
 
+  console.log(`Sending prompt image ${prompt['Image']}`);
   await promptHelper.sendPrompt(
       context, participant["Phone"], positionString, prompt['Image']);
+  console.log(`Done sending prompt image ${prompt['Image']}`);
+
   participant["Status"] = "Prompted";
   participant["Last Prompt"] = prompt["Key"];
 
-  await backOff(() => participant.save());
+  console.log(`Setting participant status to "Prompted"`);
+  await participant.save();
+  console.log(`Done setting participant status to "Prompted"`);
 }
 
