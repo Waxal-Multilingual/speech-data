@@ -169,11 +169,29 @@ is ```join waxal-speech```, and your sandbox phone number is ```+14155238886```
 you can send them the URL
 
 ```
-https://wa.me/+14155238886?text=join%waxal-speech
+https://wa.me/+14155238886?text=join%20waxal-speech
 ```
 
 Once users send the message, they will officially be enrolled and can start the
 process by sending **"hi"** to the bot.
+
+#### Automate user registration
+In a live study, you may want to automatically register users once they have completed the consent form. To see an example of this, take a look at the [example form](https://docs.google.com/forms/d/1V7qz6agNkI4zOAQxksi7mMdFFTIy0lTWBGfRvTSbUw8/edit) and [Apps Script Trigger](https://script.google.com/home/projects/18Bj3X4FranYU-ug4dfvfgLDqU6X8axWZythDT29gW8sBRfVd3krmJiDV/edit).
+
+This form installs a submit trigger that adds participants to the Particpant sheet and also provides a shortcut to pre-populate the sandbox registration Whatsapp message. Feel free to make a copy of the form for your study.
+
+The 2 key parts of the form to update are:
+
+1. Setting the correct participant sheet ID on line 13 of the [trigger](https://script.google.com/home/projects/18Bj3X4FranYU-ug4dfvfgLDqU6X8axWZythDT29gW8sBRfVd3krmJiDV/edit):
+```
+var sheet = SpreadsheetApp.openById("[your_participant_sheet_id]").getSheetByName("Participant")
+```
+2. Setting a confirmation message that provides the correct sandbox registration message template (Under [Settings](https://docs.google.com/forms/d/1V7qz6agNkI4zOAQxksi7mMdFFTIy0lTWBGfRvTSbUw8/edit#settings) -> Presentation -> Confirmation Message)
+
+```
+Your consent has been recorded. Please follow the following link on your phone to register: https://wa.me/+14155238886?text=join%20[your_sandbox_code]
+```
+
 
 ### Find your audio data
 
