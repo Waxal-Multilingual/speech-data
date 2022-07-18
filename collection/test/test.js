@@ -23,32 +23,45 @@ function getServiceAccountKey() {
 }
 
 async function checkSheet(vars, key, sheetName) {
+  const jwt = await authHelper.authorizeGoogleApis(
+      service_account_key_relative_path);
+
+  const drive = google.drive({version: 'v3', auth: jwt});
+
+  let permissions;
   try {
-    const jwt = await authHelper.authorizeGoogleApis(
-        service_account_key_relative_path);
-
-    const drive = google.drive({version: 'v3', auth: jwt});
-
-    const permissions = await drive.files.get(
-        {fileId: vars[sheetName], fields: '*'});
-
-    assert(permissions.data.capabilities.canEdit,
-        `Please make sure ${key["client_email"]} is a writer of file 
-        ${vars[sheetName]}`)
-
-    const sheets = google.sheets({version: 'v4', "auth": jwt});
-    const result = await sheets.spreadsheets.get({
-      spreadsheetId: vars[sheetName],
-    });
-    assert(result.data.sheets[0].properties.title
-        === sheetsHelper.sheetMap[sheetName], `Please make sure the first sheet in the file is named 
-        ${sheetsHelper.sheetMap[sheetName]}`);
+    permissions = await drive.files.get({fileId: vars[sheetName], fields: '*'});
   } catch (e) {
-    console.error(e);
-    assert.fail(`Please make sure sheet 
-      ${vars[sheetName]} 
-          is editable by robot account ${key["client_email"]}`)
+    assert(e.response.status !== 404,
+        `Please make sure ${vars[sheetName]} with key ${sheetName} exists and is accessible to ${key["client_email"]}`);
+    throw e;
   }
+
+  assert(permissions.data.capabilities.canEdit,
+      `Please make sure ${key["client_email"]} is a writer of file 
+        ${vars[sheetName]} with key ${sheetName}`)
+
+  const sheets = google.sheets({version: 'v4', "auth": jwt});
+  const result = await sheets.spreadsheets.get({
+    spreadsheetId: vars[sheetName],
+  });
+  assert(result.data.sheets[0].properties.title
+      === sheetsHelper.sheetMap[sheetName], `Please make sure the first sheet in the file is named 
+        ${sheetsHelper.sheetMap[sheetName]}`);
+}
+
+async function apiCheck(apiName) {
+  await authHelper.authorizeGoogleApis(service_account_key_relative_path);
+  const usageClient = new ServiceUsageClient();
+
+  const key = getServiceAccountKey();
+
+  const services = await usageClient.listServices(
+      {parent: `projects/${key["project_id"]}`, filter: 'state:ENABLED'});
+  const api = services[0].find(s => s.name.includes("drive.googleapis.com"));
+  assert(api.state === "ENABLED",
+      `Please make sure the ${apiName} API is enabled in your GCP project:`
+      + " https://console.cloud.google.com/apis/api/drive.googleapis.com/overview");
 }
 
 describe("Startup tests", () => {
@@ -75,19 +88,13 @@ describe("Startup tests", () => {
     assert(key.length !== 0,
         "Please set your service account key for writing to a cloud storage bucket");
   });
+
+  it("Drive API enabled", async () => {
+    await apiCheck("drive");
+  }).timeout(150000);
+
   it("Sheets API enabled", async () => {
-    await authHelper.authorizeGoogleApis(service_account_key_relative_path);
-    const usageClient = new ServiceUsageClient();
-
-    const key = getServiceAccountKey();
-
-    const services = await usageClient.listServices(
-        {parent: `projects/${key["project_id"]}`, filter: 'state:ENABLED'});
-    const sheetsApi = services[0].find(
-        s => s.name.includes("sheets.googleapis.com"));
-    assert(sheetsApi.state === "ENABLED",
-        "Please make sure the Sheets API is enabled in your GCP project:"
-        + " https://console.cloud.google.com/apis/api/sheets.googleapis.com/overview");
+    await apiCheck("drive");
   }).timeout(150000);
 
   it("Sheets accessible to robot", async () => {
