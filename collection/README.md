@@ -75,7 +75,8 @@ above.
   of [this file](https://docs.google.com/spreadsheets/d/1Zb5eifySYaQ9eDdmOC133bo1Ut8FgfzxNQZL4m9gjB8/edit#gid=0)
   to get started.
 
-* **prompt-sheet**: Sheet containing URLs of images to be used for prompts. You
+* **prompt-sheet**: Sheet containing prompts. A prompt can be text, image or audio, depending on which column you
+  populate. You
   can make a copy
   of [this file](https://docs.google.com/spreadsheets/d/1468gA4cFf74-YuH9cXMbWRcHpZFFfP3z27e_NyjB0Bk/edit#gid=0)
   to get started.
