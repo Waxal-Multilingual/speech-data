@@ -7,7 +7,7 @@
 ### Summary
 
 This package contains a JS library that works in conjunction with Twilio to
-perform speech data collection using image prompts. The instructions below
+perform speech data collection using image/text/audio prompts. The instructions below
 detail how to set up your own collection pipeline using the code.
 
 ## Before you start
@@ -117,8 +117,7 @@ testing.
   before joining the study. This audio will restate their consent and give them
   an opportunity to opt out.
 
-* **error-message-audio**: This audio is played for a user once they have
-  completed the full set of questions.
+* **error-message-audio**: This audio is played for a user if there is a server error (eg. Quota issue). Users should be able to continue from where they left off once the error is resolved.
 
 ##### Misc
 
