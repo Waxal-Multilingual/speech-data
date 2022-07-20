@@ -58,7 +58,9 @@ exports.getNextPrompt = async (participantKey, language) => {
   // Pick a random index among the unused prompts.
   const random = Math.floor(Math.random() * responses.length);
   return {
-    "prompt": responses[random]['Audio'],
+    "prompt": {
+      "media": responses[random]['Audio']
+    },
     "key": responses[random]['Key'],
     "position": usedResponses.size + 1
   };

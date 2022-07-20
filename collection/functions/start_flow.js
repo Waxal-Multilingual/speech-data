@@ -147,12 +147,20 @@ async function handleSendPrompt(context, participant) {
 
   let positionString = `${position}/${participant["Questions"]}`;
 
-  const mediaType = isTranscription ? 'audio' : 'image';
+  const mediaType = isTranscription ? 'audio' : 'media';
 
-  console.log(`Sending prompt ${mediaType} ${prompt}`);
-  await promptHelper.sendPrompt(
-      context, participant["Phone"], positionString, prompt);
-  console.log(`Done sending prompt ${mediaType} ${prompt}`);
+  console.log(`Sending prompt ${mediaType} ${JSON.stringify(prompt)}`);
+  if (prompt['media']) {
+    // If it is an audio/image prompt, send position first, then media.
+    await promptHelper.sendPrompt(
+        context, participant["Phone"], positionString);
+    await promptHelper.sendPrompt(
+        context, participant["Phone"], "", prompt['media']);
+  } else {
+    // Else, send position with prompt concatenated.
+    await promptHelper.sendPrompt(
+        context, participant["Phone"], positionString + `\n${prompt['text']}`);
+  }
 
   participant["Status"] = "Prompted";
   participant["Last Prompt"] = fetchedPrompt["key"];
