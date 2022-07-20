@@ -24,9 +24,10 @@ exports.handler = async (context, event, callback) => {
 
     if (participant) {
       let status = participant["Status"];
+      console.log(`Participant status is ${status}`);
       if (status === "Consented") {
         // Send consent audio for first timers.
-        console.log("Sending consent message");
+        console.log(`Sending consent message for participant type: ${participant['Type']}`);
         if (participant['Type'] === 'Transcriber') {
           let text = varsHelper.getVar("transcription-instructions");
           await promptHelper.sendPrompt(context, participantPhone, text);
@@ -36,6 +37,7 @@ exports.handler = async (context, event, callback) => {
         }
       }
       if (status === "Prompted") {
+        console.log("Processing prompt response");
         // Expect a response for prompted users.
         let lastPrompt = participant["Last Prompt"];
         await handlePromptResponse(
@@ -43,11 +45,13 @@ exports.handler = async (context, event, callback) => {
             participant);
       } else if (status === "Ready" || status === "Consented") {
         // Send the first image for consented and ready users.
+        console.log("Sending next prompt");
         await handleSendPrompt(context, participant);
       }
       // If status is completed, send the completion audio.
       // This can either be the state at entry or after {@link handlePromptResponse}.
       if (participant["Status"] === "Completed") {
+        console.log("Sending closing message");
         // Send the closing message for completed users.
         let surveyCompletedAudio = varsHelper.getVar("survey-completed-audio")
         await promptHelper.sendPrompt(
