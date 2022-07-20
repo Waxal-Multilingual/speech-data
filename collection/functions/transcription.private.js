@@ -1,5 +1,6 @@
 const varsHelper = require(Runtime.getFunctions()['vars_helper'].path);
-const sheetsHelper = require(Runtime.getFunctions()['google_sheets_helper'].path);
+const sheetsHelper = require(
+    Runtime.getFunctions()['google_sheets_helper'].path);
 const uuid = require("uuid");
 
 /**
@@ -54,6 +55,10 @@ exports.getNextPrompt = async (participantKey, language) => {
                 "transcriptions-per-response"))
             && !usedResponses.has(row['Key'])
       });
+
+  if (responses.length === 0) {
+    throw "All available responses have been transcribed the max number of times. Please add more";
+  }
 
   // Pick a random index among the unused prompts.
   const random = Math.floor(Math.random() * responses.length);
