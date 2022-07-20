@@ -117,7 +117,8 @@ testing.
   before joining the study. This audio will restate their consent and give them
   an opportunity to opt out.
 
-* **error-message-audio**: This audio is played for a user if there is a server error (eg. Quota issue). Users should be able to continue from where they left off once the error is resolved.
+* **error-message-audio**: This audio is played for a user if there is a server error (eg. Quota issue). Users should be
+  able to continue from where they left off once the error is resolved.
 
 ##### Misc
 
@@ -150,6 +151,7 @@ Twilio server.
 ### Test your server locally
 
 To start a local server run ```npm start``` from ```speech-data/collection```.
+A sanity check will run to verify that the preliminary steps have all been completed and that your sheets have been set up correctly.
 Fix any errors that pop up until your server is running. Once the server is up,
 take note of the URL of the `start_flow` function. Example below:
 
@@ -170,6 +172,12 @@ page and set the *WHEN A MESSAGE COMES IN* field to that URL. After this point,
 you should be ready to test your collection flow.
 
 ## Run a data collection study
+
+### Prepare your prompts
+
+Waxal can be used to send text, image or audio prompts. You can find a selection of over 2000 image prompts
+in [this file](https://docs.google.com/spreadsheets/d/1wlItYWGXu3GtHWfQD8m8_FcUVqWsCzINPkwDB5fkExs/edit#gid=1031689018).
+For your own study, you can set the *Image* *Audio* or *Text* column for each prompt accordingly. Setting more than 1 column is not supported.
 
 ### Register a participant and start sending prompts
 
