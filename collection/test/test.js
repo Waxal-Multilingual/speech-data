@@ -82,10 +82,10 @@ async function apiCheck(apiName) {
 
     const services = await usageClient.listServices(
         {parent: `projects/${key["project_id"]}`, filter: 'state:ENABLED'});
-    const api = services[0].find(s => s.name.includes("drive.googleapis.com"));
+    const api = services[0].find(s => s.name.includes(`${apiName}.googleapis.com`));
     assert(api.state === "ENABLED",
         `Please make sure the ${apiName} API is enabled in your GCP project:`
-        + " https://console.cloud.google.com/apis/api/drive.googleapis.com/overview");
+        + ` https://console.cloud.google.com/apis/api/${apiName}.googleapis.com/overview`);
 }
 
 describe("Startup tests", () => {
@@ -118,7 +118,7 @@ describe("Startup tests", () => {
     }).timeout(150000);
 
     it("Sheets API enabled", async () => {
-        await apiCheck("drive");
+        await apiCheck("sheets");
     }).timeout(150000);
 
     it("Sheets set up correctly", async () => {
