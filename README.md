@@ -34,7 +34,7 @@ This file contains translations of the text from the **Transcriptions** table.
  - Text: The translated text.
 
 ## Data collection
-Audio data was crowd-sourced with a chat bot using Whatsapp and Twilio. Transcription and translation was performed by linguists. More details below.
+Audio data was crowd-sourced with a chat bot using Whatsapp and Twilio. Transcription and translation was performed by linguists. Prompts were chosen in a uniform distribution from [this list](https://docs.google.com/spreadsheets/d/1wlItYWGXu3GtHWfQD8m8_FcUVqWsCzINPkwDB5fkExs).
 
 ### Methodology
 #### Speech
