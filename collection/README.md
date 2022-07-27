@@ -249,8 +249,8 @@ Once you have concluded the speech collection phase of your study, you can use
 Waxal to crowd-source transcriptions via Whatsapp. To add a transcriber, simply
 set their *Type* column to **"Transcriber".**
 
-Text transcription responses will be written to the *transcription-sheet*
-file ([eg.](https://docs.google.com/spreadsheets/d/1MKzliEHKdHNJ00pwaObyhhTOGP7rMJN8QJOnQxgCMxk/edit#gid=0))
+In this case, the audio files from the *Response* sheet will be sent to *Transcriber* participants in a uniformly distributed fashion. Text transcription responses will be written to the *transcription-sheet*
+file ([example](https://docs.google.com/spreadsheets/d/1MKzliEHKdHNJ00pwaObyhhTOGP7rMJN8QJOnQxgCMxk/edit#gid=0))
 .
 
 ## Use the Waxal Manager app to transcribe and translate
