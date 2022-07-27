@@ -3,7 +3,7 @@
 ## Stats
 | Language | Participants | Recordings | Speech hours | Transcribed Hours |
 |----------|-----|----|-----|-------------------|
-| Wolof    |4242 |86296 | 519          | 5.2                 |
+| Wolof    |4242 |86296 | 519          | 6.45                 |
 ## Goal
 Collect/Create NLP resources using crowdsourced speech and text data of diverse African languages and use it to research novel architectures and deep learning algorithms for multilingual NLP systems (Speech, NMT, Q&A, LM, etc.) that are robust to variations in accents, code switching, and targeted at low-end mobile devices. Waxal will make NLP systems more inclusive while advancing the state of the art in deep learning for NLP and machine learning under severe  memory/computing constraints.
 
