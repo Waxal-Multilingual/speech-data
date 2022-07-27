@@ -2,7 +2,10 @@
 
 ## Overview
 
-![alt text](https://github.com/Waxal-Multilingual/speech-data/blob/main/docs/flow.png?raw=true)
+<figure>
+<img src="https://github.com/Waxal-Multilingual/speech-data/blob/main/docs/flow.png?raw=true" alt="Waxal flow diagram">
+<figcaption align = "center"><b>Waxal flow diagram</b></figcaption>
+</figure>
 
 ### Summary
 
@@ -207,6 +210,11 @@ https://wa.me/+14155238886?text=join%20waxal-speech
 Once users send the message, they will officially be enrolled and can start the
 process by sending **"hi"** to the bot.
 
+<figure>
+   <img src="https://github.com/Waxal-Multilingual/speech-data/blob/main/docs/image_prompt.png?raw=true" alt="Example image prompt" style="width:200px;"/>
+   <figcaption align = "center"><b>Example image prompt</b></figcaption>
+</figure>
+
 #### Automate user registration
 
 In a live study, you may want to automatically register users once they have
@@ -253,7 +261,13 @@ In this case, the audio files from the *Response* sheet will be sent to *Transcr
 file ([example](https://docs.google.com/spreadsheets/d/1MKzliEHKdHNJ00pwaObyhhTOGP7rMJN8QJOnQxgCMxk/edit#gid=0))
 .
 
+<figure>
+   <img src="https://github.com/Waxal-Multilingual/speech-data/blob/main/docs/audio_prompt.png?raw=true" alt="Example image prompt" style="width:300px; float: right"/>
+   <figcaption align = "center"><b>Example transcription prompt</b></figcaption>
+</figure>
+
 ## Use the Waxal Manager app to transcribe and translate
+
 
 [Waxal Manager](https://www.appsheet.com/Template/AppDef?appName=WaxalManager-4528453-22-06-26)
 is an example [AppSheet](https://www.appsheet.com/) app that can be used to
@@ -261,4 +275,7 @@ manage your data collection process. You can clone the app and point to your
 project's spreadsheets to use it. The app provides views for managing prompts,
 participants, responses, transcriptions and translations.
 
-![alt text](https://github.com/Waxal-Multilingual/speech-data/blob/main/docs/manager.png?raw=true)
+<figure>
+   <img src="https://github.com/Waxal-Multilingual/speech-data/blob/main/docs/manager.png?raw=true" style="width: 500px">
+   <figcaption align = "center"><b>Waxal Manager App</b></figcaption>
+</figure>
