@@ -14,7 +14,7 @@ Africa is the most linguistically diverse continent in the world. The performanc
 Data for each language's audio is stored in a different folder. The CSV structure is the same across languages. Download the latest release from [Releases](https://github.com/Waxal-Multilingual/speech-data/releases/tag/Live).
 
 ### Audio files
-To download the audio files, run `gsutil -m cp -R gs://waxal-public {path/to/local}`. You can then replace `https://storage.googleapis.com/` in the **Audio** field of the **Response** table with your `{path/to/local}`.
+Download the audio files from [this repo](https://github.com/Waxal-Multilingual/audio-files). You can then replace `https://storage.googleapis.com/` in the **Audio** field of the **Response** table with your `{path/to/local}`.
 
 ### Tables
 #### Response
